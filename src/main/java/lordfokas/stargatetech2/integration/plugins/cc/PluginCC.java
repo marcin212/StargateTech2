@@ -5,6 +5,7 @@ import lordfokas.stargatetech2.core.reference.ConfigReference;
 import lordfokas.stargatetech2.core.reference.TileEntityReference;
 import lordfokas.stargatetech2.core.util.Stacks;
 import lordfokas.stargatetech2.integration.plugins.BasePlugin;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dan200.computercraft.api.ComputerCraftAPI;
 
@@ -16,6 +17,7 @@ public class PluginCC extends BasePlugin {
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	protected void load() {
 		busAdapter = new BlockBusAdapter();
 		GameRegistry.registerTileEntity(TileBusAdapter.class, TileEntityReference.TILE_BUS_ADAPTER);

@@ -1,5 +1,6 @@
 package lordfokas.stargatetech2.transport.block;
 
+import cofh.api.item.IToolHammer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,7 +13,6 @@ import lordfokas.stargatetech2.core.reference.BlockReference;
 import lordfokas.stargatetech2.core.reference.TextureReference;
 import lordfokas.stargatetech2.core.util.IconRegistry;
 import lordfokas.stargatetech2.transport.tileentity.TileTransportRing;
-import buildcraft.api.tools.IToolWrench;
 
 public class BlockTransportRing extends BaseBlockContainer{
 
@@ -39,12 +39,12 @@ public class BlockTransportRing extends BaseBlockContainer{
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer p, int s, float hx, float hy, float hz){
 		ItemStack stack = p.inventory.getCurrentItem();
 		Item item = stack != null ? stack.getItem() : null;
-		if(item instanceof IToolWrench){
-			IToolWrench wrench = (IToolWrench) item;
-			if(wrench.canWrench(p, x, y, z)){
+		if(item instanceof IToolHammer){
+			IToolHammer wrench = (IToolHammer) item;
+			if(wrench.isUsable(stack, p, x, y, z)){
 				dropBlockAsItem(w, x, y, z, 0, 0);
 				w.setBlock(x, y, z, Blocks.air, 0, 3);
-				wrench.wrenchUsed(p, x, y, z);
+				wrench.toolUsed(stack, p, x, y, z);
 				return true;
 			}
 		}

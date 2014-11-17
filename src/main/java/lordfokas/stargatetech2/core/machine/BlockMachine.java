@@ -1,5 +1,6 @@
 package lordfokas.stargatetech2.core.machine;
 
+import cofh.api.item.IToolHammer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import lordfokas.stargatetech2.StargateTech2;
 import lordfokas.stargatetech2.core.base.BaseBlockContainer;
@@ -17,7 +17,6 @@ import lordfokas.stargatetech2.core.reference.TextureReference;
 import lordfokas.stargatetech2.core.util.GUIHandler.Screen;
 import lordfokas.stargatetech2.core.util.Helper;
 import lordfokas.stargatetech2.core.util.IconRegistry;
-import buildcraft.api.tools.IToolWrench;
 
 public abstract class BlockMachine extends BaseBlockContainer {
 	private boolean useVertical = false;
@@ -64,12 +63,12 @@ public abstract class BlockMachine extends BaseBlockContainer {
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer p, int s, float hx, float hy, float hz){
 		ItemStack stack = p.inventory.getCurrentItem();
 		Item item = stack != null ? stack.getItem() : null;
-		if(item instanceof IToolWrench && canPlayerAccess(p, w, x, y, z) && p.isSneaking()){
-			IToolWrench wrench = (IToolWrench) item;
-			if(wrench.canWrench(p, x, y, z)){
+		if(item instanceof IToolHammer && canPlayerAccess(p, w, x, y, z) && p.isSneaking()){
+			IToolHammer wrench = (IToolHammer) item;
+			if(wrench.isUsable(stack, p, x, y, z)){
 				dropBlockAsItem(w, x, y, z, 0, 0);
 				w.setBlock(x, y, z, (Block) Block.blockRegistry.getObjectById(0), 0, 3);
-				wrench.wrenchUsed(p, x, y, z);
+				wrench.toolUsed(stack, p, x, y, z);
 				return true;
 			}
 		}else if(!p.isSneaking() && screen != null && canPlayerAccess(p, w, x, y, z)){

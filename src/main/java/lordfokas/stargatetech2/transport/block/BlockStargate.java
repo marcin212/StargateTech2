@@ -1,5 +1,6 @@
 package lordfokas.stargatetech2.transport.block;
 
+import cofh.api.item.IToolHammer;
 import lordfokas.stargatetech2.api.ITabletAccess;
 import lordfokas.stargatetech2.api.bus.BusEvent;
 import lordfokas.stargatetech2.api.stargate.ITileStargate;
@@ -26,7 +27,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class BlockStargate extends BaseBlockContainer implements ITabletAccess{
@@ -73,10 +73,10 @@ public class BlockStargate extends BaseBlockContainer implements ITabletAccess{
         public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer p, int s, float hx, float hy, float hz){
                 ItemStack stack = p.inventory.getCurrentItem();
                 Item item = stack != null ? stack.getItem() : null;
-                if(item instanceof IToolWrench){
-                        IToolWrench wrench = (IToolWrench) item;
+                if(item instanceof IToolHammer){
+                		IToolHammer wrench = (IToolHammer) item;
                         TileEntity te = w.getTileEntity(x, y, z);
-                        if(te instanceof ITileStargateBase && wrench.canWrench(p, x, y, z)){
+                        if(te instanceof ITileStargateBase && wrench.isUsable(stack, p, x, y, z)){
                                 TileStargate stargate = null;
                                 if(te instanceof TileStargateBase){
                                         stargate = ((TileStargateBase)te).getStargate();
@@ -86,7 +86,7 @@ public class BlockStargate extends BaseBlockContainer implements ITabletAccess{
                                 
                                 if (MinecraftForge.EVENT_BUS.post(new StargateEvent.StargateWrenched(stargate.getAddress(), stargate.getWorldObj(), stargate.xCoord, stargate.yCoord, stargate.zCoord))) return false;
                                 stargate.destroyStargate();
-                                wrench.wrenchUsed(p, x, y, z);
+                                wrench.toolUsed(stack, p, x, y, z);
                                 return true;
                         }
                 }
