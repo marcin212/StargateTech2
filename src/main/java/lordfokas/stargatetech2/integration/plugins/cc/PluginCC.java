@@ -6,6 +6,7 @@ import lordfokas.stargatetech2.core.reference.TileEntityReference;
 import lordfokas.stargatetech2.core.util.Stacks;
 import lordfokas.stargatetech2.integration.plugins.BasePlugin;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.Optional;  
 import dan200.computercraft.api.ComputerCraftAPI;
 
 public class PluginCC extends BasePlugin {
@@ -14,7 +15,8 @@ public class PluginCC extends BasePlugin {
 	public PluginCC() {
 		super("ComputerCraft", ConfigReference.KEY_PLUGINS_CC);
 	}
-
+	
+	@Optional.Method(modid = "ComputerCraft")
 	@Override
 	protected void load() {
 		busAdapter = new BlockBusAdapter();
