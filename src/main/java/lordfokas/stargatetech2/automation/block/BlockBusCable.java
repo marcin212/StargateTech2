@@ -2,7 +2,6 @@ package lordfokas.stargatetech2.automation.block;
 
 import java.util.List;
 
-import cofh.api.item.IToolHammer;
 import lordfokas.stargatetech2.api.bus.IBusDevice;
 import lordfokas.stargatetech2.api.bus.IBusInterface;
 import lordfokas.stargatetech2.automation.bus.BusInterface;
@@ -20,6 +19,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import buildcraft.api.tools.IToolWrench;
 
 public class BlockBusCable extends BaseBlock {
 	
@@ -63,12 +63,12 @@ public class BlockBusCable extends BaseBlock {
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer p, int s, float hx, float hy, float hz){
 		ItemStack stack = p.inventory.getCurrentItem();
 		Item item = stack != null ? stack.getItem() : null;
-		if(item instanceof IToolHammer){
-			IToolHammer wrench = (IToolHammer) item;
-			if(wrench.isUsable(stack, p, x, y, z)){
+		if(item instanceof IToolWrench){
+			IToolWrench wrench = (IToolWrench) item;
+			if(wrench.canWrench(p, x, y, z)){
 				dropBlockAsItem(w, x, y, z, 0, 0);
 				w.setBlock(x, y, z, Blocks.air, 0, 3);
-				wrench.toolUsed(stack, p, x, y, z);
+				wrench.wrenchUsed(p, x, y, z);
 				return true;
 			}
 		}

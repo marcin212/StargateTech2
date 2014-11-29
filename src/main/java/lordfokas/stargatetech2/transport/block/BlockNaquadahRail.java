@@ -2,7 +2,6 @@ package lordfokas.stargatetech2.transport.block;
 
 import java.util.List;
 
-import cofh.api.item.IToolHammer;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
@@ -15,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import lordfokas.stargatetech2.StargateTech2;
 import lordfokas.stargatetech2.api.shields.IShieldable;
 import lordfokas.stargatetech2.api.shields.ShieldPermissions;
 import lordfokas.stargatetech2.core.reference.BlockReference;
@@ -24,6 +24,7 @@ import lordfokas.stargatetech2.core.util.Vec3Int;
 import lordfokas.stargatetech2.enemy.tileentity.TileShield;
 import lordfokas.stargatetech2.enemy.tileentity.TileShieldController;
 import lordfokas.stargatetech2.transport.rendering.RenderNaquadahRail;
+import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class BlockNaquadahRail extends BlockRailBase implements IShieldable, ITileEntityProvider{
@@ -74,13 +75,13 @@ public class BlockNaquadahRail extends BlockRailBase implements IShieldable, ITi
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer p, int s, float hx, float hy, float hz){
 		ItemStack stack = p.inventory.getCurrentItem();
 		Item item = stack != null ? stack.getItem() : null;
-		if(item instanceof IToolHammer){
-			IToolHammer wrench = (IToolHammer) item;
+		if(item instanceof IToolWrench){
+			IToolWrench wrench = (IToolWrench) item;
 			boolean isShielded = (w.getBlockMetadata(x,y,z) & 8) != 0;
-			if(wrench.isUsable(stack, p, x, y, z) && !isShielded){
+			if(wrench.canWrench(p, x, y, z) && !isShielded){
 				dropBlockAsItem(w, x, y, z, 0, 0);
 				w.setBlock(x, y, z, Blocks.air, 0, 3);
-				wrench.toolUsed(stack, p, x, y, z);
+				wrench.wrenchUsed(p, x, y, z);
 				return true;
 			}
 		}
