@@ -3,7 +3,6 @@ package lordfokas.stargatetech2.core.api;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fluids.Fluid;
 import lordfokas.stargatetech2.api.IFactory;
-import lordfokas.stargatetech2.api.IStackManager;
 import lordfokas.stargatetech2.api.StargateTechAPI;
 import lordfokas.stargatetech2.api.stargate.IStargateNetwork;
 import lordfokas.stargatetech2.api.stargate.IStargatePlacer;
@@ -19,17 +18,17 @@ public final class APIImplementation extends StargateTechAPI {
 		StargateLogger.info("Enabling StargateTech2 API.");
 		apiInstance = this;
 	}
-
+	
 	@Override
 	public Fluid getIonizedParticlesFluidInstance() {
 		return IonizedParticles.fluid;
 	}
-
+	
 	@Override
 	public CreativeTabs getStargateTab() {
 		return StargateTab.instance;
 	}
-
+	
 	@Override
 	public IStargateNetwork getStargateNetwork() {
 		return StargateNetwork.instance();
