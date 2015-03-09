@@ -1,7 +1,10 @@
 package lordfokas.stargatetech2.transport;
 
+import java.util.ArrayList;
+
 import lordfokas.stargatetech2.ModuleTransport;
 import lordfokas.stargatetech2.api.StargateTechAPI;
+import lordfokas.stargatetech2.api.bus.BusPacket;
 import lordfokas.stargatetech2.api.bus.BusPacketLIP;
 import lordfokas.stargatetech2.api.bus.BusPacketLIP.LIPMetadata;
 import lordfokas.stargatetech2.api.bus.IBusDevice;
@@ -16,13 +19,17 @@ import lordfokas.stargatetech2.transport.bus.BusDriverStargate;
 import lordfokas.stargatetech2.transport.stargates.StargateNetwork;
 import lordfokas.stargatetech2.transport.stargates.Wormhole;
 import lordfokas.stargatetech2.world.genlists.StargateBuildList;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -97,6 +104,40 @@ public class TileStargate extends BaseTileEntity implements ITileStargateBase, I
 		}else{
 			serverTick();
 		}
+	}
+	
+	public void sendLIPPacketToDestinationSG(BusPacketLIP packet){
+		String cmd = packet.get("command");
+		short dest = 0xfff;
+		try{
+			if(packet.get("destination")!=null)
+				dest = Short.parseShort(packet.get("destination"));
+		}catch(NumberFormatException e){}
+		
+		if(hasActiveWormhole() && wormhole.getDestination()!=null && wormhole.getDestination().interfaces[0]!=null && wormhole.getDestination().networkDriver!=null){
+			BusDriverStargate nDriver = wormhole.getDestination().networkDriver;
+			if(cmd!=null){
+				BusPacketLIP newPacket = new BusPacketLIP(nDriver.getInterfaceAddress(), dest);
+				ArrayList<String> keys = packet.getEntryList();
+				for(String key: keys){
+				if(!"command".equalsIgnoreCase(key) && !"destination".equalsIgnoreCase(key) && !"action".equalsIgnoreCase(key))
+					newPacket.set(key, packet.get(key));
+				}
+				newPacket.setMetadata(new LIPMetadata(ModReference.MOD_ID, "Stargate", ""));
+				newPacket.set("action", cmd);
+				newPacket.finish();
+				nDriver.addPacket(newPacket);
+				wormhole.getDestination().interfaces[0].sendAllPackets();
+				packet.addResponse("Packet sent!");
+			}else{
+				packet.addResponse("Packet not sent! Command is empty!");
+			}
+		
+		}else{
+			packet.addResponse("Packet not sent! Stargate is closed!");
+		}
+		
+		
 	}
 	
 	public void setDirectionX(boolean isX){

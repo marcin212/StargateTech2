@@ -62,6 +62,8 @@ public class BusDriverStargate implements IBusDriver{
 			}else if(action.equalsIgnoreCase("closeIris")){
 				// stargate.closeIris();
 				lip.addResponse("Who is that Irish you speak of?");
+			}else if(action.equalsIgnoreCase("sendData")){
+				stargate.sendLIPPacketToDestinationSG(lip);
 			}
 		}
 	}

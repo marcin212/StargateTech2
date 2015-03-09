@@ -66,6 +66,10 @@ public final class Wormhole {
 		return destination.getAddress();
 	}
 	
+	public TileStargate getDestination() {
+		return destination;
+	}
+	
 	private void doTeleport(){
 		AxisAlignedBB aabb;
 		if(source.isX()){
